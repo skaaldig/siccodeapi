@@ -1,53 +1,50 @@
 from django.db import models
 
 
-class SicDescription(models.Model):
-    description = models.CharField(max_length=255)
-
-    class Meta:
-        abstract = True
-
-
-class MajorGroup(SicDescription):
+class MajorGroup(models.Model):
     """
     First two digits in the SICCODE
     """
     major_number = models.CharField(max_length=2)
+    description = models.CharField(max_length=255)
 
     def __str__(self):
-        return f'{self.major_number}  {self.description}'
+        return f'{self.major_number} - {self.description}'
 
 
-class IndustryGroup(SicDescription):
+class IndustryGroup(models.Model):
     """
     Third digit in SICCODE
     """
     major_number = models.ForeignKey(MajorGroup, on_delete=models.CASCADE)
     group_number = models.CharField(max_length=1)
+    description = models.CharField(max_length=255)
 
     def __str__(self):
-        return f'{self.group_number}  {self.description}'
+        return f'{self.group_number} - {self.description}'
 
 
-class IndustrySector(SicDescription):
+class IndustrySector(models.Model):
     """
     Fourth digit in SICCODE
     """
     group_number = models.ForeignKey(IndustryGroup, on_delete=models.CASCADE)
     sector_number = models.CharField(max_length=1)
+    description = models.CharField(max_length=255)
 
     def __str__(self):
-        return f'{self.sector_number}  {self.description}'
+        return f'{self.sector_number} - {self.description}'
 
 
-class SicCode(SicDescription):
+class SicCode(models.Model):
     """
     Full 4 digit SICCODE
     """
     major_group = models.ForeignKey(MajorGroup, on_delete=models.CASCADE)
     industry_group = models.ForeignKey(IndustryGroup, on_delete=models.CASCADE)
     industry_sector = models.ForeignKey(IndustrySector, on_delete=models.CASCADE)
-    sic_code = models.CharField(max_length=4)
+    description = models.CharField(max_length=255, blank=True)
+    sic_code = models.CharField(max_length=4, blank=True)
 
     def save(self):
         group = self.major_group
@@ -57,3 +54,6 @@ class SicCode(SicDescription):
         self.sic_code = group.major_number + industry.group_number + sector.sector_number
         self.description = sector.description
         super(SicCode, self).save()
+
+    def __str__(self):
+        return f'{self.sic_code} - {self.description}'

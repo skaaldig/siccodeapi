@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from rest_framework import viewsets
+from django_filters.rest_framework import DjangoFilterBackend
 from . import models
 from . import serializers
 
@@ -22,3 +23,5 @@ class IndustrySectorViewSet(viewsets.ModelViewSet):
 class SicCodeViewSet(viewsets.ModelViewSet):
     queryset = models.SicCode.objects.all()
     serializer_class = serializers.SicCodeSerializer
+    filter_backends = (DjangoFilterBackend,)
+    filter_fields = ('sic_code',)

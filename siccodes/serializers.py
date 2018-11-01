@@ -17,7 +17,7 @@ class IndustryGroupSerializer(serializers.HyperlinkedModelSerializer):
 class IndustrySectorSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = IndustrySector
-        fields = ['url', 'major_number', 'description']
+        fields = ['url', 'group_number', 'description']
 
 
 class SicCodeSerializer(serializers.HyperlinkedModelSerializer):
