@@ -1,13 +1,12 @@
-from django.shortcuts import render
 from rest_framework import viewsets
 from django_filters.rest_framework import DjangoFilterBackend
 from . import models
 from . import serializers
 
 
-class MajorGroupViewSet(viewsets.ModelViewSet):
-    queryset = models.MajorGroup.objects.all()
-    serializer_class = serializers.MajorGroupSerializer
+class IndustrySectorViewSet(viewsets.ModelViewSet):
+    queryset = models.IndustrySector.objects.all()
+    serializer_class = serializers.IndustrySectorSerializer
 
 
 class IndustryGroupViewSet(viewsets.ModelViewSet):
@@ -15,9 +14,9 @@ class IndustryGroupViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.IndustryGroupSerializer
 
 
-class IndustrySectorViewSet(viewsets.ModelViewSet):
-    queryset = models.IndustrySector.objects.all()
-    serializer_class = serializers.IndustrySectorSerializer
+class IndustryViewSet(viewsets.ModelViewSet):
+    queryset = models.Industry.objects.all()
+    serializer_class = serializers.IndustrySerializer
 
 
 class SicCodeViewSet(viewsets.ModelViewSet):

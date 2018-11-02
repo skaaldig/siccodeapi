@@ -4,9 +4,9 @@ from . import views
 
 
 router = routers.DefaultRouter()
-router.register(r'major-group', views.MajorGroupViewSet)
-router.register(r'industry-group', views.IndustryGroupViewSet)
 router.register(r'industry-sector', views.IndustrySectorViewSet)
+router.register(r'industry-group', views.IndustryGroupViewSet)
+router.register(r'industry', views.IndustryViewSet)
 router.register(r'sic-code', views.SicCodeViewSet)
 
 
