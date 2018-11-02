@@ -1,58 +1,66 @@
+import uuid
 from django.db import models
 
 
-class IndustrySector(models.Model):
+class CommonInfo(models.Model):
+    uuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+
+    class Meta:
+        abstract = True
+
+
+class IndustrySector(CommonInfo):
     """
     First two digits in the SICCODE
     """
-    industry_sector = models.CharField(max_length=2)
+    sector_id = models.CharField(max_length=2)
     description = models.CharField(max_length=255)
 
     def __str__(self):
-        return f'{self.industry_sector} - {self.description}'
+        return f'{self.sector_id} - {self.description}'
 
 
-class IndustryGroup(models.Model):
+class IndustryGroup(CommonInfo):
     """
     Third digit in SICCODE
     """
-    industry_sector = models.ForeignKey(IndustrySector, on_delete=models.CASCADE)
-    industry_group = models.CharField(max_length=1)
+    sector_id = models.ForeignKey(IndustrySector, on_delete=models.CASCADE)
+    group_id = models.CharField(max_length=1)
     description = models.CharField(max_length=255)
 
     def __str__(self):
-        return f'{self.industry_group} - {self.description}'
+        return f'{self.group_id} - {self.description}'
 
 
-class Industry(models.Model):
+class Industry(CommonInfo):
     """
     Fourth digit in SICCODE
     """
-    industry_group = models.ForeignKey(IndustryGroup, on_delete=models.CASCADE)
-    industry = models.CharField(max_length=1)
+    group_id = models.ForeignKey(IndustryGroup, on_delete=models.CASCADE)
+    industry_id = models.CharField(max_length=1)
     description = models.CharField(max_length=255)
 
     def __str__(self):
-        return f'{self.industry} - {self.description}'
+        return f'{self.industry_id} - {self.description}'
 
 
-class SicCode(models.Model):
+class SicCode(CommonInfo):
     """
     Full 4 digit SICCODE
     """
-    industry_sector = models.ForeignKey(IndustrySector, on_delete=models.CASCADE)
-    industry_group = models.ForeignKey(IndustryGroup, on_delete=models.CASCADE)
-    industry = models.ForeignKey(Industry, on_delete=models.CASCADE)
+    sector_id = models.ForeignKey(IndustrySector, on_delete=models.CASCADE)
+    group_id = models.ForeignKey(IndustryGroup, on_delete=models.CASCADE)
+    industry_id = models.ForeignKey(Industry, on_delete=models.CASCADE)
     description = models.CharField(max_length=255, blank=True)
     sic_code = models.CharField(max_length=4, blank=True)
 
     def save(self):
-        sector = self.industry_sector
-        group = self.industry_group
-        industry_num = self.industry
+        sector = self.sector_id
+        group = self.group_id
+        industry = self.industry_id
 
-        self.sic_code = sector.industry_sector + group.industry_group + industry_num.industry
-        self.description = industry_num.description
+        self.sic_code = sector.sector_id + group.group_id + industry.industry_id
+        self.description = industry.description
         super(SicCode, self).save()
 
     def __str__(self):
